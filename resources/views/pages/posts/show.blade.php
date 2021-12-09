@@ -48,7 +48,11 @@
                                                 {{ __('Like') }}
                                             @endif
                                         </a>
-                                        <a href="{{ route('likes.list', ['post' => $post]) }}" id="postLikeCounter" class="text-success">
+                                        <a href="{{ route('likes.list', ['post' => $post]) }}"
+                                           data-empty-content="{{ __('No one still likes this post') }}"
+                                           id="postLikeCounter"
+                                           class="text-success user-modal-link"
+                                        >
                                             ({{ $post->likes_count }})
                                         </a>
                                     </p>
@@ -66,16 +70,50 @@
                             <hr />
                             <div id="comments" class="row">
                                 <div class="col mt-3" id="comments">
+{{--                                    @if($post->comments()->count())--}}
+{{--                                        <ul class="list-group">--}}
+{{--                                            @foreach ($post->comments->reverse() as $comment)--}}
+{{--                                            <li class="list-group-item" id="comment{{$comment->id}}">--}}
+{{--                                                <div class="card mb-3">--}}
+{{--                                                    <div class="row g-0">--}}
+{{--                                                        <div class="col-md-4">--}}
+{{--                                                            <img src="{{ $comment->user->details->profile_photo }}" alt="comment author" />--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="col-md-8">--}}
+{{--                                                            <div class="card-body">--}}
+{{--                                                                <h5 class="card-title">{{ $comment->user->details->display_name }}</h5>--}}
+{{--                                                                <p class="card-text">{{ $comment->text }}</p>--}}
+{{--                                                                <p class="card-text">--}}
+{{--                                                                    <small class="text-muted">--}}
+{{--                                                                        {{ $comment->created_at->format('H:i, d.m.Y') }}--}}
+{{--                                                                    </small>--}}
+{{--                                                                </p>--}}
+{{--                                                                @if (auth()->id() === $comment->user_id || auth()->id() === $post->user_id)--}}
+{{--                                                                    <p class="card-text">--}}
+{{--                                                                        <a href="{{ route('comments.destroy', ['comment' => $comment]) }}" class="delete-comment text-danger" data-comment-id="{{ $comment->id }}">--}}
+{{--                                                                            {{ __('Delete comment') }}--}}
+{{--                                                                        </a>--}}
+{{--                                                                    </p>--}}
+{{--                                                                @endif--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </li>--}}
+{{--                                            @endforeach--}}
+{{--                                        </ul>--}}
+{{--                                    @else--}}
                                     <p class="text-muted">{{ __('No comments for this post') }}</p>
+{{--                                    @endif--}}
                                 </div>
                             </div>
                             <hr />
                             <div class="row">
                                 <div class="col mt-3" id="commentsForm">
                                     <p>{{ __('Write comment') }}</p>
-                                    <form method="post">
+                                    <form method="post" action="{{ route('comments.store', ['post' => $post]) }}">
                                         @csrf
-                                        <textarea class="form-control"></textarea>
+                                        <textarea class="form-control" name="text"></textarea>
                                         <div class="mt-1 text-end">
                                             <button class="btn btn-primary">{{ __('Submit') }}</button>
                                         </div>
@@ -91,65 +129,6 @@
         <script>
             window.onload = function() {
 
-                function get_profile_card(user) {
-                    let details = user.details;
-                    let card = document.createElement('div');
-                    card.className = 'card mb-3';
-                    let row = document.createElement('div');
-                    row.className = 'row g-0';
-                    let imageContainer = document.createElement('div');
-                    imageContainer.className = 'col-md-4';
-                    let image = document.createElement('img');
-                    image.src = details.profile_photo;
-                    image.alt = details.display_name;
-                    image.title = details.display_name;
-                    image.width = 100;
-                    image.className = 'img-fluid rounded-start';
-                    imageContainer.appendChild(image);
-                    row.appendChild(imageContainer);
-                    let bodyContainer = document.createElement('div');
-                    bodyContainer.className = 'col-md-8';
-                    let cardBody = document.createElement('div');
-                    cardBody.className = 'card-body';
-                    let title = document.createElement('h5');
-                    title.className = 'card-title';
-                    title.innerHTML = '<a href="/p/' + user.id + '" title="{{ __('View profile') }}">' + details.display_name + '</a>';
-                    cardBody.appendChild(title);;
-                    bodyContainer.appendChild(cardBody);
-                    row.appendChild(bodyContainer);
-                    card.appendChild(row);
-
-                    return card;
-                }
-
-                function get_modal(title, content) {
-                    let modal = document.createElement('div');
-                    modal.className = 'modal';
-                    modal.tabIndex = -1;
-                    let dialog = document.createElement('div');
-                    dialog.className = 'modal-dialog';
-                    let modalContent = document.createElement('div');
-                    modalContent.className = 'modal-content';
-                    let header = document.createElement('div');
-                    header.className = 'modal-header';
-                    header.innerHTML = '<h5 class="modal-title">' + title + '</div>';
-                    header.innerHTML += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-                    let body = document.createElement('div');
-                    body.className = 'modal-body';
-                    let footer = document.createElement('div');
-                    footer.className = 'modal-footer';
-                    footer.innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
-                    modalContent.appendChild(header);
-                    body.appendChild(content);
-                    modalContent.appendChild(body);
-                    modalContent.appendChild(footer);
-                    dialog.appendChild(modalContent);
-                    modal.appendChild(dialog);
-
-                    return modal;
-                }
-
-
                 document.getElementById('postRemove').addEventListener('click', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -161,6 +140,8 @@
                             } else {
                                 window.alert('{{ __('There was an error while deleting the post') }}');
                             }
+                        }).catch(() => {
+                            window.alert('Cannot delete post');
                         });
                     }
                 });
@@ -177,23 +158,20 @@
                     });
                 });
 
-                document.getElementById('postLikeCounter').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    axios.get(event.target.href).then((response) => {
-                        let listGroup = document.createElement('ul');
-                        listGroup.className = 'list-group';
-                        for (let i in response.data) {
-                            let profile = response.data[i];
-                            let item = document.createElement('li');
-                            item.className = 'list-group-item';
-                            item.appendChild(get_profile_card(profile));
-                            listGroup.appendChild(item);
-                        }
-
-                        (new bootstrap.Modal(get_modal('Users who liked this post', listGroup))).show();
+                let deleteLinks = document.querySelectorAll('.delete-comment');
+                let delLinksLength = deleteLinks.length;
+                for (let i = 0; i < delLinksLength; i++) {
+                    let link = deleteLinks[i];
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        axios.delete(event.target.href).then((response) => {
+                            if (response.status === 200 && response.data.result) {
+                                document.querySelector('#comment' + event.target.dataset.commentId).remove();
+                            }
+                        }).catch(() => { window.alert('Error while deleting the comment'); });
                     });
-                });
+                }
 
             };
         </script>

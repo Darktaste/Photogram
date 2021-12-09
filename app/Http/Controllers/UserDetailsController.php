@@ -8,47 +8,6 @@ use App\Http\Requests\UpdateUserDetailsRequest;
 
 class UserDetailsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreUserDetailsRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreUserDetailsRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\UserDetails  $userDetails
-     * @return \Illuminate\Http\Response
-     */
-    public function show(UserDetails $userDetails)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -56,9 +15,10 @@ class UserDetailsController extends Controller
      * @param  \App\Models\UserDetails  $userDetails
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserDetails $userDetails)
+    public function edit()
     {
-        //
+        $details = auth()->user()->details;
+        return view('pages.account.edit', ['details' => $details]);
     }
 
     /**
@@ -68,19 +28,26 @@ class UserDetailsController extends Controller
      * @param  \App\Models\UserDetails  $userDetails
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserDetailsRequest $request, UserDetails $userDetails)
+    public function update(UpdateUserDetailsRequest $request)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\UserDetails  $userDetails
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(UserDetails $userDetails)
-    {
-        //
+        $validated = $request->validated();
+        $details = auth()->user()->details;
+        $details->bio = strip_tags($validated['bio']);
+        $details->phone = strip_tags($validated['phone']);
+        $details->display_name = strip_tags($validated['display_name']);
+        if ($request->file('profile_photo')) {
+            $userDir = '/uploads/users/' . md5(auth()->user()->email);
+            $uploadDir = storage_path('app/public') . $userDir; 
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir);
+            }
+            $path = $request->file('profile_photo')->store('public' . $userDir);
+            $details->profile_photo = str_replace('public', '/storage', $path);
+        }
+        if ($details->save()) {
+            return redirect()->route('profile', ['user' => auth()->user()]);
+        }
+        
+        return redirect()->back()->withErrors(['Cannot save account details']);
     }
 }

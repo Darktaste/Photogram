@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\UserDetailsController;
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,7 +22,7 @@ Route::middleware(['auth'])->group(function () {
     });
     
     // GET localhost:8000/p/1
-    Route::get('/p/{user}', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('/p/{user?}', [ProfileController::class, 'profile'])->name('profile');
     
     // GET localhost:8000/feed[/1]
     Route::get('/feed/{user?}', function () {
@@ -29,14 +30,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('feed');
     
     // GET localhost:8000/post
-    Route::get('/post', function () {
-        return view('welcome');
-    })->name('post.create');
+    Route::get('/post', [PostController::class, 'create'])->name('post.create');
     
     // POST localhost:8000/post
-    Route::post('/post', function () {
-        return view('welcome');
-    })->name('post.store');
+    Route::post('/post', [PostController::class, 'store'])->name('post.store');
     
     // GET localhost:8000/post/123
     Route::get('/post/{post?}', function () {
@@ -49,14 +46,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('post.remove');
     
     // GET localhost:8000/account
-    Route::get('/account', function () {
-        return view('welcome');
-    })->name('account.edit');
+    Route::get('/account', [UserDetailsController::class, 'edit'])->name('account.edit');
     
     // POST localhost:8000/post
-    Route::post('/account', function () {
-        return view('welcome');
-    })->name('account.update');
+    Route::post('/account', [UserDetailsController::class, 'update'])->name('account.update');
     
     // GET localhost:8000/like/123
     Route::get('/like/{post}', function () {
@@ -67,6 +60,34 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/like/{post}', function () {
         return view('welcome');
     })->name('likes.toggle');
+    
+    // GET localhost:8000/following/1
+    Route::get('/following/{user}', function () {
+        return view('welcome');
+    })->name('following');
+    
+    // GET localhost:8000/followers/1
+    Route::get('/followers/{user}', function () {
+        return view('welcome');
+    })->name('followers');
+    
+    // POST localhost:8000/follow/1
+    Route::post('/follow/{user}', function () {
+        return view('welcome');
+    })->name('follow');
+    
+    // GET localhost:8000/search
+    Route::get('/search', function () {
+        return view('welcome');
+    })->name('search.show');
+    
+    // GET localhost:8000/search/users?keywords=asdasd
+    Route::get('/search/users', function () {
+        return view('welcome');
+    })->name('search.users');
+    
+    // comments.store -> POST
+    // comments.destroy -> DELETE
 });
 
 

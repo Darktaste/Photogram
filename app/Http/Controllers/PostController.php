@@ -27,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.posts.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        
     }
 
     /**

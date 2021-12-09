@@ -13,12 +13,12 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Home') }}
                     </x-nav-link>
                     <x-nav-link :href="route('profile', ['user' => Auth::user()->id])" :active="request()->routeIs('profile')">
                         {{ __('Profile') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('profile', ['user' => Auth::user()->id])" :active="request()->routeIs('profile')">
+                    <x-nav-link :href="route('search.show', ['user' => Auth::user()->id])" :active="request()->routeIs('search.show')">
                         {{ __('Search') }}
                     </x-nav-link>
                     <x-nav-link :href="route('post.create')" :active="request()->routeIs('posts.create')">
