@@ -125,10 +125,10 @@
                 </div>
             </div>
         </div>
-        @if($post->user->id === auth()->id())
+        
         <script>
             window.onload = function() {
-
+@if($post->user->id === auth()->id())
                 document.getElementById('postRemove').addEventListener('click', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -145,7 +145,7 @@
                         });
                     }
                 });
-
+ @endif
                 document.getElementById('postLike').addEventListener('click', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -175,7 +175,7 @@
 
             };
         </script>
-        @endif
+       
     </div>
 
 </x-app-layout>
