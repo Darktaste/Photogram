@@ -60,7 +60,7 @@
                             template.querySelector('.post-cover').title = post.description;
                             template.querySelector('.post-view-link').href = '{{ route('post.show') }}/' + post.id;
                             template.querySelector('.post-author').innerText = post.user.details.display_name;
-                            template.querySelector('.post-author').href = '{{ route('profile') }}' + post.user.id;
+                            template.querySelector('.post-author').href = '{{ route('profile') }}/' + post.user.id;
                             template.querySelector('.post-description').innerText = post.description;
                             let created_at = new Date(post.created_at);
                             template.querySelector('.post-created').innerText = created_at.getDate() + '.' + created_at.getMonth() + '.' + created_at.getFullYear();
