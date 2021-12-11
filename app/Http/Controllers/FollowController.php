@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Events\NewFollowerEvent;
 
 class FollowController extends Controller
 {
@@ -22,6 +23,10 @@ class FollowController extends Controller
     {
         $me = auth()->user();
         $me->following()->toggle($user->id);
+        
+        if ($me->following->contains($user)) {
+            NewFollowerEvent::dispatch($me, $user);
+        }
         
         return redirect()->back();
     }

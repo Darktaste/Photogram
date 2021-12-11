@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use App\Events\NewPostEvent;
 
 class PostController extends Controller
 {
@@ -75,13 +76,16 @@ class PostController extends Controller
                 $url = str_replace('public', '/storage', $file);
                 $post->photos()->create(['url' => $url]);
             }
+            
+            NewPostEvent::dispatch($post);
+            
             return redirect()->route('profile', ['user' => auth()->user()]);
         } catch (\Throwable $ex) {
             if ($post->id) {
                 $post->delete();
             }
             
-            return redirect()->back()->withErrors[$ex->getMessage()];
+            return redirect()->back()->withErrors([$ex->getMessage()]);
         }
     }
 

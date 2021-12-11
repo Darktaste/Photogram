@@ -71,4 +71,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'followings', 'followed_id', 'follower_id');
     }
+    
+    public function userNotificationsUnread()
+    {
+        return $this->userNotifications()->where('seen', '=', 0)->get();
+    }
+    
+    public function userNotificationsUnreadCount()
+    {
+        return $this->userNotifications()->where('seen', '=', 0)->count();
+    }
 }

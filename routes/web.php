@@ -18,7 +18,7 @@ use App\Http\Controllers\FollowController;
 |
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'notif'])->group(function () {
     
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -73,14 +73,15 @@ Route::middleware(['auth'])->group(function () {
         return view('welcome');
     })->name('comments.store');
     
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
     // comments.store -> POST
     // comments.destroy -> DELETE
 });
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';

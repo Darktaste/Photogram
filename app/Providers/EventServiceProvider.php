@@ -7,6 +7,12 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\RegisteredUserDetailsListener;
+use App\Events\NewFollowerEvent;
+use App\Listeners\NewFollowerListener;
+use App\Events\NewPostEvent;
+use App\Listeners\NewPostListener;
+use App\Events\NewLikeEvent;
+use App\Listeners\NewLikeListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -31,6 +37,21 @@ class EventServiceProvider extends ServiceProvider
         Event::listen(
             Registered::class,
             [RegisteredUserDetailsListener::class, 'handle']
+        );
+        
+        Event::listen(
+            NewFollowerEvent::class,
+            [NewFollowerListener::class, 'handle']
+        );
+        
+        Event::listen(
+            NewPostEvent::class,
+            [NewPostListener::class, 'handle']
+        );
+        
+        Event::listen(
+            NewLikeEvent::class,
+            [NewLikeListener::class, 'handle']
         );
     }
 }
