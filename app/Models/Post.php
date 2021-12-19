@@ -27,4 +27,10 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'likes');
     }
+    
+    //създаваме релацията с коментарите
+    public function comments()
+    {
+        return $this->hasMany(Comments::class);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\LikesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\CommentsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,16 +70,19 @@ Route::middleware(['auth', 'notif'])->group(function () {
     // GET localhost:8000/search/users?keywords=asdasd
     Route::get('/search/users', [SearchController::class, 'users'])->name('search.users');
     
-    Route::post('/comment/{post}', function () {
-        return view('welcome');
-    })->name('comments.store');
+//    Route::post('/comment/{post}', function () {
+//        return view('welcome');
+//    })->name('comments.store');
     
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
     
     // comments.store -> POST
+    Route::post('/comment/{post}', [CommentsController::class, 'store'])->name('comments.store');
+    
     // comments.destroy -> DELETE
+    Route::delete('/comment/{comment}', [CommentsController::class, 'destroy'])->name('comments.destroy');
 });
 
 

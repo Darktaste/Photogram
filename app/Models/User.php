@@ -81,4 +81,10 @@ class User extends Authenticatable
     {
         return $this->userNotifications()->where('seen', '=', 0)->count();
     }
+    
+    //създаваме релацията с коментарите
+    public function comments()
+    {
+        return $this->hasMany(Comments::class);
+    }
 }
