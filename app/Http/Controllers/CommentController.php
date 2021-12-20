@@ -36,7 +36,7 @@ class CommentController extends Controller
         
         return response()->json([
             'status' => 200, 
-            'result' => 'successfu;ly deleted',
+            'result' => true,
             ]);
         
              
