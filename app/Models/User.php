@@ -83,7 +83,7 @@ class User extends Authenticatable
     }
     
     //създаваме релацията с коментарите
-    public function comments()
+    public function comment()
     {
         return $this->hasMany(Comments::class);
     }

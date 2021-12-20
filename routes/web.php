@@ -7,7 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\LikesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FollowController;
-use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -79,10 +79,10 @@ Route::middleware(['auth', 'notif'])->group(function () {
     })->name('dashboard');
     
     // comments.store -> POST
-    Route::post('/comment/{post}', [CommentsController::class, 'store'])->name('comments.store');
+    Route::post('/comment/{post}', [CommentController::class, 'store'])->name('comments.store');
     
     // comments.destroy -> DELETE
-    Route::delete('/comment/{comment}', [CommentsController::class, 'destroy'])->name('comments.destroy');
+    Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 

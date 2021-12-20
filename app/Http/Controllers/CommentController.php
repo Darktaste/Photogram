@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Comments;
-use App\Http\Requests\StoreCommentsRequest;
+use App\Models\Comment;
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\User;
 use App\Models\Post;
-use App\Policies\CommentsPolicy;
-use App\Http\Controllers\PostController;
 
 
 
-class CommentsController extends Controller
+class CommentController extends Controller
 {
     
     
     
-    public function store(StoreCommentsRequest $request, Post $post)
+    public function store(StoreCommentRequest $request, Post $post)
     {
         $validated = $request->validated();
-        $comment = new Comments();
+        $comment = new Comment();
         $comment->text = strip_tags($validated['text']);
         $comment->user()->associate(auth()->user());
         $comment->post()->associate($post);
@@ -33,12 +31,14 @@ class CommentsController extends Controller
     
     public function destroy($id)
     {   
-        
-        
-        $comment = Comments::where('id', $id);
-        
+        $comment = Comment::where('id', $id);
         $comment->delete();
-         
-        return response(''. 204);
+        
+        return response()->json([
+            'status' => 200, 
+            'result' => 'successfu;ly deleted',
+            ]);
+        
+             
     }
 }

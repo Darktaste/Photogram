@@ -31,6 +31,6 @@ class Post extends Model
     //създаваме релацията с коментарите
     public function comments()
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comment::class);
     }
 }
