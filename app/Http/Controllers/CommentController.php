@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
-use App\Models\User;
 use App\Models\Post;
 
 
@@ -29,16 +28,25 @@ class CommentController extends Controller
     }
     
     
-    public function destroy($id)
+    public function destroy(Request $request, Comment $comment)
     {   
-        $comment = Comment::where('id', $id);
-        $comment->delete();
+ 
+        if ($request->user()->cannot('delete', $comment)) {
+            abort(403);
+        }
         
+       $query =  $comment->delete();
+        
+       if($query) {
         return response()->json([
             'status' => 200, 
             'result' => true,
             ]);
-        
-             
+       } else {
+           return responce()->json([
+               'status' => 400,
+               'result' => false,
+           ]);
+       }        
     }
 }

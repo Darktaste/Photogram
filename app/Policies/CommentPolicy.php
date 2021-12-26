@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Comments;
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -19,9 +19,9 @@ class CommentPolicy
      * @param  \App\Models\Comments  $comments
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Comments $comments)
+    public function delete(User $user, Comment $comment)
     {
-       return $comments->user->id === $user->id || $comments->post->user->id === $user->id;
+       return $comment->user->id === $user->id || $comment->post->user->id === $user->id;
     }
 
     
